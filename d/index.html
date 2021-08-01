@@ -141,7 +141,7 @@ function decrypt() {
                 console.log(decryptedTexte);
   if(decryptedTexte.indexOf(ht) > -1) {
 console.log('true')
-    $('input').val(decryptedTexte.substring(4, decryptedTexte.length);).attr('readonly','readonly');
+    $('input').val(decryptedTexte.substring(4, decryptedTexte.length)).attr('readonly','readonly');
     $('.input_name').html('連結');
     $('.btn').html('開啟').attr('ripple-onclick','openlink()');
     $('h1').html('連結已解密');
