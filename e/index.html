@@ -1,1 +1,236 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<title>連結加密</title>
+<style>
+:root {
+  --input-height:45px;
+  --input-width:190px;
+  --input-name-size:13px;
+  --input-padding:5px;
+  --input-name-min-size:5px;
+  --input-color:#000;
+}
 
+
+.input {
+  position:relative;
+  width:calc(var(--input-width));
+  height:calc(var(--input-height));
+  border-radius:5px;
+  border:2px #000 solid;
+  box-sizing: border-box;
+}
+.foc {
+  position:relative;
+  width:calc(var(--input-width));
+  height:calc(var(--input-height));
+  border-radius:5px;
+  border:2px var(--input-color) solid;
+  box-sizing: border-box;
+}
+.input_name {
+  position:absolute;
+  left:calc(var(--input-padding) * 2);
+  bottom:50%;
+  color:#888;
+  opacity:0.6;
+  transition:0.3s;
+  transform:translateY(50%) scale(1) translateX(0px);
+  background:rgba(0,0,0,0);
+  padding:2px
+}
+.foc .input_name {
+  position:absolute;
+  left:calc(var(--input-padding) * 2);
+  bottom:calc(((var(--input-height)) * 0.5 - var(--input-name-size) * -0.2));
+  transform:translateY(calc(0px - ((var(--input-height) * 0.5 - var(--input-name-size) * 0.5) - var(--input-padding)) * 0.3)) scale(0.8) translateX(calc(-20% - 4px));
+  color:#333;
+  opacity:1;
+  transition:0.3s;
+  padding:2px;
+  background:#fff;
+}
+
+.input input {
+  width:calc(var(--input-width)  - var(--input-padding) * 2);
+  height:calc(var(--input-height) - var(--input-padding) * 2);
+  padding:var(--input-padding);
+  margin:0px;
+  border:none;
+  position:absolute;
+  bottom:0px;
+  left:0px;
+  background:rgba(0, 0, 0, 0);
+  -webkit-appearance:none;
+  outline:none; -webkit-tap-highlight-color:rgba(0,0,0,0);
+  font-size:var(--input-name-size);
+}
+.btn {
+  height:var(--input-height);
+  width:80px;
+  background:#000;
+  border-radius:5px;
+  color:#fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size:18px;
+  margin-left:5px
+}
+.pwd {
+  position:fixed;
+  left:0px;
+  top:0px;
+  width:100%;
+  height:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction:column;
+}
+.pwd h1 {
+  position:absolute;
+  top:30px;
+  left:50%;
+  transform:translateX(-50%)
+}
+.oi {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction:row;
+  margin-top:10px
+}
+#f2 {
+  display:none;
+}
+</style>
+<div class="pwd">
+  <h1>加密連結</h1>
+  <div class="oi">
+<div class="input">
+  <div class="input_name">連結</div>
+  <input type="text" gt="0">
+</div>
+<div class="btn" ripple-onclick="encrypt()">確認</div>
+</div>
+  
+  <div class="oi" id="f2">
+<div class="input foc">
+  <div class="input_name">密碼</div>
+  <input type="text" gt="1">
+</div>
+<div class="btn" ripple-onclick="copy(1)">複製</div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://erichsia7.github.io/ripple.js/ripple.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aes-js/3.1.2/index.min.js"></script>
+<script>
+$('input').focus(function() {
+  $('.input').eq($(this).attr('gt')).attr('class','input foc')
+});
+$('input').blur(function() {
+  if($(this).val() === '') {
+ $('.input').eq($(this).attr('gt')).attr('class','input')
+  }
+});
+ripple('.btn','#fff','0.6',1200,'true');
+
+
+
+var aesurlplt = '55e3fe79f2460763ac29d4be7b00e20ac67db5a83bf6df' ; //441346
+var ht = 'le.c' ;
+
+
+function genid(mode) {
+if(mode === "random"){
+var genidchars = "0123456789abcdefghijklmnopqrstuvwxyz";
+            var genid = "";
+            for (var i = 0; i < 5; i++) {
+                var genrandomNumber = Math.floor(Math.random() * genidchars.length);
+                genid += genidchars.substring(genrandomNumber, genrandomNumber + 1);
+            }
+  return genid ;
+}
+          
+ if(mode === "time"){
+   var gtoday=new Date();
+   var genid2 = (gtoday.getMonth()+1) + '_' + gtoday.getDate() + '_' + gtoday.getHours() + '_' + gtoday.getMinutes() + '_' + gtoday.getSeconds() + '-' + (1+Math.floor(Math.random() * 8)) + '' + (1+Math.floor(Math.random() * 8)) + '' + (1+Math.floor(Math.random() * 8)) + '' + (1+Math.floor(Math.random() * 8)) + '' + (1+Math.floor(Math.random() * 8)) + '' + (1+Math.floor(Math.random() * 8)) + '' + (1+Math.floor(Math.random() * 8)) + '' + (1+Math.floor(Math.random() * 8));
+   
+   return genid2
+ }
+  
+  if(mode === "number"){
+   
+   var genid3 = '' ;
+for (var i = 0; i < 16; i++) {
+  genid3 += '' + (0+Math.floor(Math.random() * 9))
+}
+   return genid3
+ }
+  
+  if(mode === "uuid"){
+var genidchars4 = "abcdef012345678";
+    var geniduu = [8,4,4,4,12];
+            var genid4 = "";
+            var genid5 = "";
+    for (var ia = 0; ia < geniduu.length; ia++) {
+      var genid4 = "";
+            for (var i = 0; i < geniduu[ia]; i++) {
+                var genrandomNumber4 = Math.floor(Math.random() * genidchars4.length);
+                genid4 += genidchars4.substring(genrandomNumber4, genrandomNumber4 + 1);
+            }
+genid5 += '-' + genid4 ;
+    }
+    return genid5.substring(1,genid5.length)
+  }
+
+}
+
+
+
+function encrypt() {
+                var ivqu = parseInt(
+                    Math.floor(Math.random() * 8 + 1) +
+                        "" +
+                        Math.floor(Math.random() * 8 + 1) +
+                        "" +
+                        Math.floor(Math.random() * 8 + 1) +
+                        "" +
+                        Math.floor(Math.random() * 8 + 1) +
+                        "" +
+                        Math.floor(Math.random() * 8 + 1) +
+                        "" +
+                        Math.floor(Math.random() * 8 + 1)
+                );
+                
+                var keyu = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+                var vercod = genid('random') ;
+                var textBytesu = aesjs.utils.utf8.toBytes(vercod + $('input').val());
+
+                var aesCtru = new aesjs.ModeOfOperation.ctr(keyu, new aesjs.Counter(ivqu));
+                var encryptedBytesu = aesCtru.encrypt(textBytesu);
+
+                var encryptedHexu = aesjs.utils.hex.fromBytes(encryptedBytesu);
+                console.log(encryptedHexu);
+                $('input').eq(0).val('https://erichsia7.github.io/link/d/?a=' + encryptedHexu + '&b=' + vercod)
+                $('input').eq(1).val(ivqu)
+                $('.input_name').eq(0).html('加密連結')
+  $('#f2').fadeIn(1).css({'display':'flex'})
+                $('.btn').eq(0).html('複製').attr('ripple-onclick','copy(0)')
+                return [encryptedHexu,ivqu]
+            }
+
+
+
+function openlink() {
+ window.open($('input').val());
+}
+
+function copy(num) {
+  var copyText =  $('input').eq(num);
+        copyText.select();
+        document.execCommand("Copy");
+}
+</script>
