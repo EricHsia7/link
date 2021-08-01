@@ -106,6 +106,10 @@
 <script src="https://erichsia7.github.io/ripple.js/ripple.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aes-js/3.1.2/index.min.js"></script>
 <script>
+  
+var getUrlString = location.href;
+var url = new URL(getUrlString);
+
 $('input').focus(function() {
   $('.input').attr('class','input foc')
 });
@@ -118,8 +122,8 @@ ripple('.btn','#fff','0.6',1200,'true');
 
 
 
-var aesurlplt = '55e3fe79f2460763ac29d4be7b00e20ac67db5a83bf6df' ; //441346
-var ht = 'le.c' ;
+var aesurlplt = url.searchParams.get('a') ;
+var ht = url.searchParams.get('b') ;
 
 function decrypt() {
                 var keye = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
@@ -137,7 +141,7 @@ function decrypt() {
                 console.log(decryptedTexte);
   if(decryptedTexte.indexOf(ht) > -1) {
 console.log('true')
-    $('input').val(decryptedTexte).attr('readonly','readonly');
+    $('input').val(decryptedTexte.substring(4, decryptedTexte.length);).attr('readonly','readonly');
     $('.input_name').html('連結');
     $('.btn').html('開啟').attr('ripple-onclick','openlink()');
     $('h1').html('連結已解密');
