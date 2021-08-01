@@ -110,7 +110,7 @@
   <div class="oi">
 <div class="input">
   <div class="input_name">連結</div>
-  <input type="text" gt="0" readonly="readonly">
+  <input type="text" gt="0">
 </div>
 <div class="btn" ripple-onclick="encrypt()">確認</div>
 </div>
@@ -208,7 +208,7 @@ function encrypt() {
 
                 var encryptedHexu = aesjs.utils.hex.fromBytes(encryptedBytesu);
                 console.log(encryptedHexu);
-                $('input').eq(0).val('https://erichsia7.github.io/link/d/?a=' + encryptedHexu + '&b=' + vercod)
+                $('input').eq(0).val('https://erichsia7.github.io/link/d/?a=' + encryptedHexu + '&b=' + vercod).attr('readonly','readonly')
                 $('input').eq(1).val(ivqu)
                 $('.input_name').eq(0).html('加密連結')
   $('#f2').fadeIn(1).css({'display':'flex'})
